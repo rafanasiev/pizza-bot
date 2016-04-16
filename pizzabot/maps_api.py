@@ -11,9 +11,11 @@ class Places(object):
         self.type = 'meal_delivery'
         self.language = 'en-US'
         self.client = googlemaps.Client(self.key, timeout=300)
+        self.action = "order pizza"
 
-    def find_pizza(self, arg):
-        all_results = self.client.places(arg, location=self.location, radius=self.radius, language=self.language, open_now=True)
+    def find_pizza(self, args):
+        print " >>> Got args: %s" % (' '.join(args))
+        all_results = self.client.places(self.action, location=self.location, radius=self.radius, language=self.language, open_now=True)
         best_pizza = all_results['results'][0]['place_id']
         result = self.client.place(best_pizza)
         print result
