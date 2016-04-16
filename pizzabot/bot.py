@@ -57,13 +57,15 @@ class Chat(ServerEvents):
             return ">> {0}".format(args)
 
     def want_pizza(self, kwargs):
-        args = []
         pizza_place = Places()
         # logger for data from Google
         logger.debug(pizza_place)
+        search_phrase = []
+
         for k,v in kwargs.items():
-            args.append(pizza_place.find_pizza(v))
-        return args
+            search_phrase.append(v)
+
+        return pizza_place.find_pizza(search_phrase)
 
 
     def server_methods(self):
