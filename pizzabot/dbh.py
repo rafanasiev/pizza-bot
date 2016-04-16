@@ -8,7 +8,7 @@ class PizzaBotDB(object):
             self.dbfile = dbfile_path
             self.connection = sqlite3.Connection(self.dbfile)
         else:
-            raise Exception('No such database! Check the path to file')
+            raise Exception('Incorrect database name! Check the path to file')
         self.cursor = self.connection.cursor()
 
 
