@@ -1,12 +1,12 @@
 import googlemaps
 
-FIELDS = ['id', 'name', 'international_phone_number', 'place_id', 'rating', 'status']
+FIELDS = ['id', 'name', 'international_phone_number', 'place_id', 'rating' ]
 
 class Places(object):
     ''' Find pizza place'''
     def __init__(self):
         self.key = 'AIzaSyAF2BEoD4kzVJjwP0LRFvehCENLQ_Oueb8'
-        self.location = (50.401699,30.2525049)
+        self.location = (50.401699, 30.2525049)
         self.radius = 100
         self.type = 'meal_delivery'
         self.language = 'en-US'
@@ -17,7 +17,12 @@ class Places(object):
         best_pizza = all_results['results'][0]['place_id']
         result = self.client.place(best_pizza)
         final_dict = {}
+
         for f in FIELDS:
-            final_dict[f] = result['result'][f]
-            print result['result'][f]
+            if result['result'].has_key(f):
+                print " %s => %s" % (f, result['result'][f])
+                final_dict[f] = result['result'][f]
+            else:
+                final_dict[f] = None
+
         return final_dict
