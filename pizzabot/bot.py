@@ -9,7 +9,7 @@ from maps_api import Places
 
 
 # logging
-logger = logging.getLogger('root')
+logger = logging.getLogger('ChatBot')
 logger.setLevel(logging.DEBUG)
 # console handler
 console = logging.StreamHandler()
@@ -44,7 +44,7 @@ class Chat(ServerEvents):
     methods = set(['hello', 'echo', 'want_pizza', 'server_methods'])
 
     def _get_msg(self, resp):
-        logger.debug("%s -> %s" % (resp, dir(resp)))
+        #logger.debug("%s -> %s" % (resp, dir(resp)))
         return ' '.join(str(x) for x in [resp.id, resp.result or resp.error])
 
     def hello(self):
@@ -59,6 +59,8 @@ class Chat(ServerEvents):
     def want_pizza(self, kwargs):
         args = []
         pizza_place = Places()
+        # logger for data from Google
+        logger.debug(pizza_place)
         for k,v in kwargs.items():
             args.append(pizza_place.find_pizza(v))
         return args
