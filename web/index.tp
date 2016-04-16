@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+    <title>PizzaBot</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript">
+      var $SERVICE_URL = "http://localhost:12345";
+    </script>
+
+    <script type="text/javascript">
+      $(function() {
+        var submit_form = function(e) {
+          var $type = $('input[name="type"]').val();
+          var $size = $('input[name="size"]').val();
+          $.ajax({
+            url: $SERVICE_URL,
+            headers: { 'Access-Control-Allow-Origin': '*' },
+            type: "POST",
+            data: JSON.stringify({
+                method: "want_pizza",
+                id: "1",
+                jsonrpc: "2.0",
+                kwargs: { "type": $type, "size": $size }
+              }),
+            crossDomain: true,
+            dataType: 'json',
+            success: function(data) {
+                var $result = "";
+                console.log(JSON.stringify(data));
+                $.each( data.result, function(idx, val) {
+                    $result += JSON.stringify(val);
+                });
+                $('#result').text($result);
+            },
+            failure: function(ErrMsg) { alert(ErrMsg); },
+        });
+        };
+
+        $('a#pizza-bot').bind('click', submit_form);
+
+        $('input[type=text]').bind('keydown', function(e) {
+          if (e.keyCode == 13) {
+            submit_form(e);
+          }
+        });
+    });
+    </script>
+</head>
+
+<body>
+    <h1>Chat with PizzaBot</h1>
+    <p>
+      Pizza Type: <input type="text" size="10" name="type">
+      </br>
+      Pizza Size: <input type="text" size="10" name="size">
+      </br>
+    </p>
+    <p>
+      <span id="result">?</span>
+    </p>
+    <a href=# id="pizza-bot">pizza-bot</a>
+</body>
+</html>
