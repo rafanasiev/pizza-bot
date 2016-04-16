@@ -1,6 +1,6 @@
 import googlemaps
 
-FIELDS = ['id', 'name', 'international_phone_number', 'place_id', 'rating', 'status']
+FIELDS = ['id', 'name', 'international_phone_number', 'place_id', 'rating']
 
 class Places(object):
     ''' Find pizza place'''
@@ -16,6 +16,7 @@ class Places(object):
         all_results = self.client.places(arg, location=self.location, radius=self.radius, language=self.language, open_now=True)
         best_pizza = all_results['results'][0]['place_id']
         result = self.client.place(best_pizza)
+        print result
         final_dict = {}
         for f in FIELDS:
             final_dict[f] = result['result'][f]
