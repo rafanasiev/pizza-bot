@@ -2,55 +2,50 @@
 # -*- coding: utf-8 -*-
 
 
-from twisted.internet.protocol import Factory
-from twisted.protocols.basic import LineReceiver
+import logging
+from jsonrpc.server import ServerEvents
+import traceback
 
-class Chat(LineReceiver):
 
-    def __init__(self, users):
-        self.users = users
-        self.name = None
-        self.state = "GETNAME"
+# logging
+logger = logging.getLogger('Chat-Bot')
+logger.setLevel(logging.DEBUG)
+# console handler
+console = logging.StreamHandler()
+console.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console.setFormatter(formatter)
+logger.addHandler(console)
 
-    def connectionMade(self):
-        self.sendLine("What's your name?")
+class Chat(ServerEvents):
 
-    def connectionLost(self, reason):
-        if self.name in self.users:
-            del self.users[self.name]
-        print " >> user %s logged out" % (self.name)
+    def log(self, responses, txrequest, error):
+        logger.debug(txrequest.code)
 
-    def lineReceived(self, line):
-        if self.state == "GETNAME":
-            self.handle_GETNAME(line)
+        if isinstance(responses, list):
+            for response in responses:
+                msg = self._get_msg(response)
         else:
-            self.handle_CHAT(line)
+            msg = self._get_msg(responses)
+            logger.debug(txrequest, msg)
 
-    def handle_GETNAME(self, name):
-        if name in self.users:
-            self.sendLine("Name taken, please choose another.")
-            return
-        self.sendLine("Welcome, %s!" % (name,))
-        ## logging
-        print " >> got new user: %s" % (name)
-        self.name = name
-        self.users[name] = self
-        self.state = "CHAT"
+    def findmethod(self, method, args=None, kwargs=None):
+        print(repr(method))
+        logger.debug(repr(method))
 
-    def handle_CHAT(self, message):
-        message = "<%s> %s" % (self.name, message)
-        for name, protocol in self.users.iteritems():
-            if protocol != self:
-                protocol.sendLine(message)
+        if method in self.methods:
+            return getattr(self, method)
+        else:
+            return None
 
+    # helper
+    methods = set(['echo'])
 
-class ChatFactory(Factory):
+    def _get_msg(self, resp):
+        logger.debug(repr(resp))
+        return ' '.join(str(x) for x in [resp.id, resp.result or resp.error])
 
-    def __init__(self):
-        self.users = {} # maps user names to Chat instances
-
-    def buildProtocol(self, addr):
-        print ">> Started a new session %s" % (addr)
-        return Chat(self.users)
-
+    def echo(self):
+        logger.debug(" - echo method")
+        return "Hi, what's your name?"
 
