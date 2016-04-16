@@ -7,29 +7,37 @@ sys.path.append('../pizzabot')
 
 
 from twisted.internet import reactor
-from bot import ChatFactory
+from twisted.web import server
+from jsonrpc.server import JSON_RPC
+from bot import Chat
 
-def main():
+def main(argv):
 
     # cmd line arguments
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hp:", ["port="])
-    except getopt.GetoptError:
-        print "%s -p <PORT>" % (sys.argv[0])
-        sys.exit(1)
+        opts, args = getopt.getopt(argv[1:], "hp:")
+    except getopt.GetoptError as e:
+        print str(e)
+        print "%s -p <PORT>" % (argv[0])
+        sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print "%s -p <PORT>" % (sys.argv[0])
+            print "%s -p <PORT>" % (argv[0])
             sys.exit(0)
         elif opt == '-p':
-            reactor.listenTCP(int(arg), ChatFactory())
+            print "Trying to start APP at %s PORT" % arg
+            # json RPC app
+            root = JSON_RPC().customize(Chat)
+            site = server.Site(root)
+            # run application
+            reactor.listenTCP(int(arg), site)
             reactor.run()
         else:
             print "No args!"
-            print "%s -p <PORT>" % (sys.argv[0])
+            print "%s -p <PORT>" % (argv[0])
             sys.exit(1)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
