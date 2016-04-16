@@ -28,9 +28,9 @@
                 var $result = "";
                 console.log(JSON.stringify(data));
                 $.each( data.result, function(idx, val) {
-                    $result += JSON.stringify(val);
+                    $result += "<pre>" + JSON.stringify(idx) + ": " + JSON.stringify(val) + "</pre>";
                 });
-                $('#result').text($result);
+                $('#result').html($result);
             },
             failure: function(ErrMsg) { alert(ErrMsg); },
         });
