@@ -40,12 +40,27 @@ class Chat(ServerEvents):
             return None
 
     # helper
-    methods = set(['echo'])
+    methods = set(['hello', 'echo', 'want_pizza', 'server_methods'])
 
     def _get_msg(self, resp):
         logger.debug("%s -> %s" % (resp, dir(resp)))
         return ' '.join(str(x) for x in [resp.id, resp.result or resp.error])
 
-    def echo(self):
-        return "Hi, what's your name?"
+    def hello(self):
+        return "Hi, I am Pizza-Bot. Can I help you?"
 
+    def echo(self, args):
+        if isinstance(args, list):
+            return ">> %s" % (' '.join(args))
+        else:
+            return ">> {0}".format(args)
+
+    def want_pizza(self, kwargs):
+        args = []
+        for k,v in kwargs.items():
+            args.append((k, v))
+        return args
+
+
+    def server_methods(self):
+        return { 'methods': self.methods }
