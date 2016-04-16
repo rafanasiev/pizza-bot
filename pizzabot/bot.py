@@ -5,6 +5,7 @@
 import logging
 from jsonrpc.server import ServerEvents
 import traceback
+from maps_api import Places
 
 
 # logging
@@ -57,8 +58,9 @@ class Chat(ServerEvents):
 
     def want_pizza(self, kwargs):
         args = []
+        pizza_place = Places()
         for k,v in kwargs.items():
-            args.append((k, v))
+            args.append(pizza_place.find_pizza(v))
         return args
 
 
