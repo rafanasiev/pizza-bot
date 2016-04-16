@@ -1,8 +1,7 @@
 CREATE TABLE Users (
-  user_id INT NOT NULL,
+  user_id INTEGER PRIMARY KEY AUTOINCREMENT,
   email VARCHAR(80) NOT NULL,
   display_name VARCHAR(50) NOT NULL,
-  PRIMARY KEY (user_id),
   UNIQUE (email)
 );
 CREATE TABLE Orders (
@@ -12,8 +11,6 @@ CREATE TABLE Orders (
   FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 CREATE TABLE Service (
-  user_id INT NOT NULL,
-  service_info,
-  PRIMARY KEY (user_id),
-  FOREIGN KEY (user_id) REFERENCES Users(user_id)
+  search_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  service_info VARCHAR(255)
 );
