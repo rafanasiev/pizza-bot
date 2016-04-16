@@ -11,6 +11,11 @@ from twisted.web import server
 from jsonrpc.server import JSON_RPC
 from bot import Chat
 
+class Site(server.Site):
+    def getResourceFor(self, request):
+        request.setHeader('Access-Control-Allow-Origin', '*')
+        return server.Site.getResourceFor(self, request)
+
 def main(argv):
 
     # cmd line arguments
@@ -29,7 +34,7 @@ def main(argv):
             print "Trying to start APP at %s PORT" % arg
             # json RPC app
             root = JSON_RPC().customize(Chat)
-            site = server.Site(root)
+            site = Site(root)
             # run application
             reactor.listenTCP(int(arg), site)
             reactor.run()
