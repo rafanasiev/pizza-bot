@@ -1,4 +1,8 @@
-import googlemaps
+from dbh import PizzaBotDB
+try:
+    import googlemaps
+except ImportError:
+    raise  ImportError('googlemaps module not installed')
 
 FIELDS = ['id', 'name', 'international_phone_number', 'place_id', 'rating']
 
@@ -18,7 +22,8 @@ class Places(object):
         all_results = self.client.places(self.action, location=self.location, radius=self.radius, language=self.language, open_now=True)
         best_pizza = all_results['results'][0]['place_id']
         result = self.client.place(best_pizza)
-        print result
+        db = PizzaBotDB()
+        db.insert(result)
         final_dict = {}
 
         for f in FIELDS:
