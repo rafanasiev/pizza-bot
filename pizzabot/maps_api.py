@@ -9,9 +9,9 @@ FIELDS = ['id', 'name', 'international_phone_number', 'place_id', 'rating']
 class Places(object):
     ''' Find pizza place'''
     def __init__(self):
-        self.key = 'AIzaSyAF2BEoD4kzVJjwP0LRFvehCENLQ_Oueb8'
-        self.location = (50.401699, 30.2525049)
-        self.radius = 100
+        self.key = 'AIzaSyBfV8i8g9R5WnMWyz4S3_GwNWh0KKIAwQs'
+        self.location = (50.417232,30.4744568)
+        self.radius = 10
         self.type = 'meal_delivery'
         self.language = 'en-US'
         self.client = googlemaps.Client(self.key, timeout=300)
